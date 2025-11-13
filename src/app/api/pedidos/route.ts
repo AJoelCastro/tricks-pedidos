@@ -1,12 +1,17 @@
 import { IPedidoRequest } from "@/backend/interfaces/Pedido";
-import { connectDB } from "@/backend/lib/mongodb";
+import { connectDB } from "@/lib/mongodb";
 import { PedidoRepository } from "@/backend/repository/Pedido";
 import { NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
 
 const pedidoRepository = new PedidoRepository();
 
 export async function GET() {
     try {
+        const a = auth();
+        if (!a || !a.userId) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
         await connectDB();
         const pedidos = await pedidoRepository.findAll();
         return NextResponse.json(pedidos, { status: 200 });
@@ -16,6 +21,10 @@ export async function GET() {
 }
 export async function POST(request: Request) {
     try {
+        const a = auth();
+        if (!a || !a.userId) {
+            return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+        }
         await connectDB();
         const data: IPedidoRequest = await request.json();
         const newPedido = await pedidoRepository.create(data);

@@ -1,4 +1,6 @@
 import Image from "next/image";
+import Link from "next/link";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   return (
@@ -12,6 +14,19 @@ export default function Home() {
           height={20}
           priority
         />
+        <div className="absolute top-6 right-6">
+          <SignedIn>
+            <div className="flex items-center gap-2">
+              <UserButton />
+              <Link href="/pedidos" className="px-4 py-2 rounded bg-blue-600 text-white">Pedidos</Link>
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <SignInButton>
+              <button className="px-4 py-2 rounded bg-green-600 text-white">Iniciar sesión</button>
+            </SignInButton>
+          </SignedOut>
+        </div>
         <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
           <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
             To get started, edit the page.tsx file.
@@ -34,7 +49,7 @@ export default function Home() {
             center.
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+  <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
           <a
             className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
