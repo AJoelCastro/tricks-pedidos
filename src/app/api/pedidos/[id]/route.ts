@@ -6,11 +6,13 @@ const pedidoRepository = new PedidoRepository();
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params; // ✅ Await params first
+    
     await connectDB();
-    const pedido = await pedidoRepository.findById(params.id);
+    const pedido = await pedidoRepository.findById(id);
 
     if (!pedido) {
       return NextResponse.json(
@@ -30,12 +32,13 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params; // ✅ Await params first
     
     await connectDB();
-    const deleted = await pedidoRepository.delete(params.id);
+    const deleted = await pedidoRepository.delete(id);
     if (!deleted) return NextResponse.json({ message: "Pedido not found" }, { status: 404 });
     return NextResponse.json({ message: "Deleted" }, { status: 200 });
   } catch (error) {
@@ -45,13 +48,14 @@ export async function DELETE(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-   
+    const { id } = await params; // ✅ Await params first
+    
     await connectDB();
     const data = await request.json();
-    const updated = await pedidoRepository.update(params.id, data);
+    const updated = await pedidoRepository.update(id, data);
     if (!updated) return NextResponse.json({ message: "Pedido not found" }, { status: 404 });
     return NextResponse.json(updated, { status: 200 });
   } catch (error) {

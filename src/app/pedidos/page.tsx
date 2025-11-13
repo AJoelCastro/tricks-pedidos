@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { IPedido, IPedidoRequest } from "@/backend/interfaces/Pedido";
 import FormPedido from "@/components/pedidos/FormPedido";
+import PedidoService from "@/services/Pedidos";
+import { useAuth } from "@clerk/nextjs";
 
 type Pedido = IPedido & { _id?: string };
 
@@ -13,17 +15,13 @@ export default function PedidosPage() {
     const [loading, setLoading] = useState(false);
     const [editing, setEditing] = useState<Pedido | null>(null);
     const [showForm, setShowForm] = useState(false);
-
+    const { getToken } = useAuth();
     const loadPedidos = async () => {
         setLoading(true);
         try {
-            const res = await fetch("/api/pedidos");
-            if (res.ok) {
-                const data = await res.json();
-                setPedidos(data);
-            } else if (res.status === 401) {
-                window.location.href = "/";
-            }
+            const token = await getToken();
+            const data = await PedidoService.getAllPedidos(token as string);
+            setPedidos(data);
         } catch (error) {
             console.error("Error loading pedidos:", error);
         } finally {
@@ -50,13 +48,9 @@ export default function PedidosPage() {
         if (!id) return;
         if (!confirm("¿Eliminar este pedido?")) return;
         try {
-            const res = await fetch(`/api/pedidos/${id}`, {
-                method: "DELETE",
-            });
-            if (res.ok) {
+            const res = await PedidoService.deletePedido(id, await getToken() as string);
+            if (res.message === "Deleted") {
                 await loadPedidos();
-            } else if (res.status === 401) {
-                window.location.href = "/";
             }
         } catch (error) {
             console.error("Error deleting pedido:", error);
