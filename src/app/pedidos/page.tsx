@@ -100,38 +100,116 @@ export default function PedidosPage() {
     }
 
     return (
-        <div className="p-8">
-            <div className="flex items-center justify-between mb-4">
-                <h1 className="text-2xl font-bold">Pedidos</h1>
-                <div>
-                    <button onClick={handleCreate} className="px-4 py-2 bg-green-600 text-white rounded">Nuevo pedido</button>
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+            {/* Header */}
+            <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+                <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between">
+                    <h1 className="text-2xl font-bold text-slate-900">Mis Pedidos</h1>
+                    <button onClick={handleCreate} className="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg">
+                        + Nuevo Pedido
+                    </button>
                 </div>
-            </div>
+            </header>
 
-            {showForm && (
-                <div className="mb-6 p-4 border rounded bg-white">
-                    <FormPedido initialValues={editing ? (editing as unknown as Partial<IPedidoRequest>) : undefined} onSubmit={handleSubmit} onCancel={() => { setShowForm(false); setEditing(null); }} />
-                </div>
-            )}
+            {/* Main Content */}
+            <main className="mx-auto max-w-7xl px-6 py-8">
+                {/* Form Modal */}
+                {showForm && (
+                    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 flex items-center justify-center p-4">
+                        <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8">
+                            <div className="flex items-center justify-between mb-6">
+                                <h2 className="text-2xl font-bold text-slate-900">
+                                    {editing ? "Editar Pedido" : "Crear Nuevo Pedido"}
+                                </h2>
+                                <button
+                                    onClick={() => { setShowForm(false); setEditing(null); }}
+                                    className="text-slate-400 hover:text-slate-600 text-2xl font-light"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <FormPedido initialValues={editing ? (editing as unknown as Partial<IPedidoRequest>) : undefined} onSubmit={handleSubmit} onCancel={() => { setShowForm(false); setEditing(null); }} />
+                        </div>
+                    </div>
+                )}
 
-            {loading ? (
-                <div>Cargando...</div>
-            ) : (
-                <ul className="space-y-3">
-                    {pedidos.map((p, idx) => (
-                        <li key={p._id ?? idx} className="border p-3 rounded flex justify-between items-center">
-                            <div>
-                                <div className="font-medium">{p.cliente} — {p.modelo}</div>
-                                <div className="text-sm text-zinc-600">{p.cantidad} x {p.talla} — S/ {p.total}</div>
+                {/* Loading State */}
+                {loading && (
+                    <div className="flex items-center justify-center py-20">
+                        <div className="flex flex-col items-center gap-4">
+                            <div className="h-12 w-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                            <p className="text-slate-600 font-medium">Cargando pedidos...</p>
+                        </div>
+                    </div>
+                )}
+
+                {/* Pedidos Grid */}
+                {!loading && (
+                    <div className="space-y-4">
+                        {pedidos.length === 0 ? (
+                            <div className="text-center py-20">
+                                <div className="text-6xl mb-4">📋</div>
+                                <h3 className="text-xl font-semibold text-slate-900 mb-2">Sin pedidos</h3>
+                                <p className="text-slate-600 mb-6">Crea tu primer pedido para comenzar.</p>
+                                <button onClick={handleCreate} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors">
+                                    Crear Pedido
+                                </button>
                             </div>
-                            <div className="flex gap-2">
-                                <button onClick={() => handleEdit(p)} className="px-3 py-1 bg-yellow-500 text-white rounded">Editar</button>
-                                <button onClick={() => handleDelete(p._id)} className="px-3 py-1 bg-red-600 text-white rounded">Eliminar</button>
+                        ) : (
+                            <div className="grid gap-4">
+                                {pedidos.map((p, idx) => (
+                                    <div key={p._id ?? idx} className="bg-white rounded-xl shadow-sm hover:shadow-md transition-all border border-slate-100 p-6">
+                                        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                                            <div className="flex-1 space-y-2">
+                                                <div className="flex items-center gap-3">
+                                                    <h3 className="text-lg font-semibold text-slate-900">{p.cliente}</h3>
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                                                        p.estado === 'completado' ? 'bg-green-100 text-green-800' :
+                                                        p.estado === 'en proceso' ? 'bg-blue-100 text-blue-800' :
+                                                        p.estado === 'cancelado' ? 'bg-red-100 text-red-800' :
+                                                        'bg-amber-100 text-amber-800'
+                                                    }`}>
+                                                        {p.estado}
+                                                    </span>
+                                                </div>
+                                                <p className="text-slate-600">{p.modelo}</p>
+                                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2 text-sm">
+                                                    <div>
+                                                        <span className="text-slate-500">Cantidad:</span>
+                                                        <p className="font-semibold text-slate-900">{p.cantidad} x Talla {p.talla}</p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-slate-500">Total:</span>
+                                                        <p className="font-semibold text-slate-900">S/ {p.total.toFixed(2)}</p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-slate-500">Pago:</span>
+                                                        <p className={`font-semibold ${p.pago === 'completado' ? 'text-green-600' : p.pago === 'fallido' ? 'text-red-600' : 'text-amber-600'}`}>
+                                                            {p.pago}
+                                                        </p>
+                                                    </div>
+                                                    <div>
+                                                        <span className="text-slate-500">Ciudad:</span>
+                                                        <p className="font-semibold text-slate-900">{p.ciudad}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="flex gap-2 lg:flex-col lg:gap-3">
+                                                <button onClick={() => handleEdit(p)} className="flex-1 lg:flex-none px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-lg transition-colors">
+                                                    ✏️ Editar
+                                                </button>
+                                                <button onClick={() => handleDelete(p._id)} className="flex-1 lg:flex-none px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
+                                                    🗑️ Eliminar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        </li>
-                    ))}
-                </ul>
-            )}
+                        )}
+                    </div>
+                )}
+            </main>
         </div>
     );
 }

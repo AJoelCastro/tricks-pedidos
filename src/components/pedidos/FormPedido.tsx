@@ -36,75 +36,88 @@ export default function FormPedido({ initialValues, onSubmit, onCancel }: Props)
   };
 
   return (
-    <form onSubmit={handleSubmit(submit)} className="space-y-3">
-      <div>
-        <label className="block text-sm">Cliente</label>
-        <input className="w-full border p-2" {...register("cliente", { required: true })} />
-      </div>
-      <div>
-        <label className="block text-sm">Celular</label>
-        <input className="w-full border p-2" {...register("celular")} />
-      </div>
-      <div>
-        <label className="block text-sm">DNI</label>
-        <input className="w-full border p-2" {...register("dni")} />
-      </div>
-      <div>
-        <label className="block text-sm">Ciudad</label>
-        <input className="w-full border p-2" {...register("ciudad")} />
-      </div>
-      <div>
-        <label className="block text-sm">Modelo</label>
-        <input className="w-full border p-2" {...register("modelo")} />
-      </div>
-      <div className="grid grid-cols-3 gap-2">
+    <form onSubmit={handleSubmit(submit)} className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm">Talla</label>
-          <input type="number" className="w-full border p-2" {...register("talla", { valueAsNumber: true })} />
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Cliente *</label>
+          <input className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Nombre del cliente" {...register("cliente", { required: true })} />
         </div>
         <div>
-          <label className="block text-sm">Cantidad</label>
-          <input type="number" className="w-full border p-2" {...register("cantidad", { valueAsNumber: true })} />
-        </div>
-        <div>
-          <label className="block text-sm">Total</label>
-          <input type="number" step="0.01" className="w-full border p-2" {...register("total", { valueAsNumber: true })} />
+          <label className="block text-sm font-semibold text-slate-700 mb-2">DNI</label>
+          <input className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="DNI" {...register("dni")} />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm">Estado</label>
-          <select className="w-full border p-2" {...register("estado")}>
-            <option value="pendiente">pendiente</option>
-            <option value="en proceso">en proceso</option>
-            <option value="completado">completado</option>
-            <option value="cancelado">cancelado</option>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Celular</label>
+          <input className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="+51 999 999 999" {...register("celular")} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Ciudad</label>
+          <input className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Ciudad" {...register("ciudad")} />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-semibold text-slate-700 mb-2">Modelo</label>
+        <input className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" placeholder="Modelo de prenda" {...register("modelo")} />
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Talla</label>
+          <input type="number" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" {...register("talla", { valueAsNumber: true })} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Cantidad</label>
+          <input type="number" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" {...register("cantidad", { valueAsNumber: true })} />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Total (S/)</label>
+          <input type="number" step="0.01" className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" {...register("total", { valueAsNumber: true })} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Estado</label>
+          <select className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white" {...register("estado")}>
+            <option value="pendiente">Pendiente</option>
+            <option value="en proceso">En proceso</option>
+            <option value="completado">Completado</option>
+            <option value="cancelado">Cancelado</option>
           </select>
         </div>
         <div>
-          <label className="block text-sm">Pago</label>
-          <select className="w-full border p-2" {...register("pago")}>
-            <option value="pendiente">pendiente</option>
-            <option value="completado">completado</option>
-            <option value="fallido">fallido</option>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Pago</label>
+          <select className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white" {...register("pago")}>
+            <option value="pendiente">Pendiente</option>
+            <option value="completado">Completado</option>
+            <option value="fallido">Fallido</option>
           </select>
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <label className="flex items-center gap-2">
-          <input type="checkbox" {...register("esBoleta")} /> Es boleta
+      <div className="space-y-3 bg-slate-50 p-4 rounded-lg border border-slate-200">
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" className="h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" {...register("esBoleta")} />
+          <span className="font-semibold text-slate-700">Es boleta</span>
         </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" {...register("esFactura")} /> Es factura
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" className="h-5 w-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500" {...register("esFactura")} />
+          <span className="font-semibold text-slate-700">Es factura</span>
         </label>
       </div>
 
-      <div className="flex gap-2">
-        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded">Guardar</button>
+      <div className="flex gap-3 pt-6">
+        <button type="submit" className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-lg transition-all shadow-md hover:shadow-lg">
+          Guardar Pedido
+        </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="px-4 py-2 bg-gray-200 rounded">Cancelar</button>
+          <button type="button" onClick={onCancel} className="px-6 py-3 bg-slate-200 hover:bg-slate-300 text-slate-900 font-semibold rounded-lg transition-colors">
+            Cancelar
+          </button>
         )}
       </div>
     </form>
